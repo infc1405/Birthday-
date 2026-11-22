@@ -337,8 +337,8 @@ $("#blow").addEventListener("click", () => {
 });
 
 /* ---------- موسیقی ---------- */
-const SONG = "song.m4a";
-const audio = new Audio(SONG);
+const SONG = "Desert Rose DUORUSH_320k.mp3";
+const audio = new Audio(encodeURI(SONG));
 audio.loop = true;
 audio.preload = "auto";
 audio.volume = 0.85;

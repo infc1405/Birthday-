@@ -83,6 +83,13 @@
   .letter.in p:nth-child(4) { transition-delay: 1.5s; }
   .letter .sign { color: var(--gold); font-weight: 600; margin-top: 22px; }
 
+  /* age counter */
+  .ageGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 12px; max-width: 640px; width: 100%; }
+  .ageBox { padding: 16px 6px; border-radius: 18px; background: rgba(255, 241, 230, .06); border: 1px solid rgba(246, 199, 107, .35); }
+  .ageBox b { display: block; font-size: 2rem; color: var(--gold); font-weight: 800; line-height: 1.4; font-variant-numeric: tabular-nums; }
+  .ageBox span { color: var(--blush); font-weight: 300; }
+  .ageNext { margin-top: 26px; color: var(--blush); font-size: 1.15rem; }
+
   /* reasons */
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; max-width: 760px; width: 100%; }
   .card { perspective: 800px; height: 150px; background: none; border: 0; padding: 0; font-family: inherit; color: inherit; cursor: pointer; }
@@ -178,6 +185,14 @@
   <div class="letter" id="letterBox"></div>
 </section>
 
+<!-- age -->
+<section id="age">
+  <h2>عمرِ تو</h2>
+  <p class="sub">هر ثانیه‌اش برای من با ارزشه</p>
+  <div class="ageGrid" id="ageGrid"></div>
+  <p class="ageNext" id="ageNext"></p>
+</section>
+
 <!-- reasons -->
 <section id="reasons">
   <h2>چرا دوستت دارم</h2>
@@ -196,6 +211,7 @@ const CONFIG = {
   name: "همسر عزیزم",          // اسم همسرت
   from: "با عشق، ایرج",         // امضای پایین صفحه و نامه
   photo: "",                    // مسیر عکس (مثلاً "photo.jpg")؛ خالی = قلب ساده
+  birth: "1986-12-05T00:00:00",  // تاریخ تولد میلادی (۱۴ آذر ۱۳۶۵) به‌صورت سال-ماه-روز
   letter: [
     "سال‌ها کنار هم بودن، بزرگ‌ترین هدیه‌ی زندگی من بوده.",
     "تو با صبوری و مهربونیت، خونه‌ی ما رو پر از آرامش کردی.",
@@ -336,14 +352,82 @@ $("#blow").addEventListener("click", () => {
   setTimeout(() => $("#letter").scrollIntoView({ behavior: "smooth" }), 3200);
 });
 
+/* ---------- شمارنده‌ی زنده‌ی سن ---------- */
+const BIRTH = new Date(CONFIG.birth);
+const fa = (n) => n.toLocaleString("fa-IR");
+function ageParts(now) {
+  let y = now.getFullYear() - BIRTH.getFullYear();
+  let m = now.getMonth() - BIRTH.getMonth();
+  let d = now.getDate() - BIRTH.getDate();
+  let h = now.getHours() - BIRTH.getHours();
+  let mi = now.getMinutes() - BIRTH.getMinutes();
+  let sec = now.getSeconds() - BIRTH.getSeconds();
+  if (sec < 0) { sec += 60; mi--; }
+  if (mi < 0) { mi += 60; h--; }
+  if (h < 0) { h += 24; d--; }
+  if (d < 0) { d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); m--; }
+  if (m < 0) { m += 12; y--; }
+  return { y, m, w: Math.floor(d / 7), d: d % 7, h, mi, s: sec };
+}
+const ageBoxes = [["y", "سال"], ["m", "ماه"], ["w", "هفته"], ["d", "روز"], ["h", "ساعت"], ["mi", "دقیقه"], ["s", "ثانیه"]];
+$("#ageGrid").innerHTML = ageBoxes.map(([k, l]) =>
+  '<div class="ageBox"><b id="age-' + k + '">0</b><span>' + l + "</span></div>").join("");
+function nextBirthday(now) {
+  const n = new Date(now.getFullYear(), BIRTH.getMonth(), BIRTH.getDate(), BIRTH.getHours(), BIRTH.getMinutes(), BIRTH.getSeconds());
+  if (n <= now) n.setFullYear(n.getFullYear() + 1);
+  return n;
+}
+function tickAge() {
+  const now = new Date();
+  const a = ageParts(now);
+  ageBoxes.forEach(([k]) => { $("#age-" + k).textContent = fa(a[k]); });
+  const left = nextBirthday(now) - now;
+  const days = Math.floor(left / 86400000);
+  const hrs = Math.floor((left % 86400000) / 3600000);
+  $("#ageNext").textContent = (a.m === 0 && a.w === 0 && a.d === 0)
+    ? "امروز روز تولدته، تولدت مبارک!"
+    : "تا تولد بعدی " + fa(days) + " روز و " + fa(hrs) + " ساعت مونده";
+}
+tickAge(); setInterval(tickAge, 1000);
+
 /* ---------- موسیقی ---------- */
-const SONG = "Desert Rose DUORUSH_320k.mp3";
-const audio = new Audio(encodeURI(SONG));
+const SONGS = [
+  "song.mp3",
+  "Desert Rose DUORUSH_320k.mp3",
+  "Desert.Rose.DUORUSH_320k.mp3",
+  "song.m4a"
+];
+let si = 0, songOk = true;
+function note(t) {
+  if (!location.search.includes("debug")) return;
+  let el = document.getElementById("dbg");
+  if (!el) {
+    el = document.createElement("div"); el.id = "dbg";
+    el.style.cssText = "position:fixed;top:8px;left:8px;right:8px;z-index:20;background:rgba(0,0,0,.8);color:#fff;padding:8px 12px;border-radius:10px;font:13px/1.6 sans-serif;direction:ltr;text-align:left";
+    document.body.appendChild(el);
+  }
+  el.textContent = t;
+}
+const audio = new Audio();
 audio.loop = true;
 audio.preload = "auto";
 audio.volume = 0.85;
-let songOk = true;
-audio.addEventListener("error", () => { songOk = false; });
+function loadSong() {
+  audio.src = encodeURI(SONGS[si]);
+  note("trying: " + SONGS[si]);
+}
+audio.addEventListener("error", () => {
+  si++;
+  if (si < SONGS.length) {
+    loadSong();
+    if (playing) audio.play().catch(() => {});
+  } else {
+    songOk = false;
+    note("no song file found, using backup tune");
+    if (playing && !actx) startSynth();
+  }
+});
+audio.addEventListener("playing", () => note("playing: " + SONGS[si]));
 
 let playing = false;
 let actx = null, timers = [];
@@ -390,7 +474,9 @@ function startMusic() {
   if (playing) return;
   playing = true; setMusicUI(true);
   if (songOk) {
-    audio.play().catch(() => { songOk = false; if (playing) startSynth(); });
+    audio.play().catch((err) => {
+      if (err && err.name === "NotAllowedError") { playing = false; setMusicUI(false); }
+    });
   } else {
     startSynth();
   }
@@ -401,6 +487,7 @@ function stopMusic() {
 }
 $("#music").addEventListener("click", () => (playing ? stopMusic() : startMusic()));
 $("#start").addEventListener("click", startMusic);
+loadSong();
 </script>
 </body>
 </html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تولدت مبارک</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wine: #1a0a14;
+    --plum: #3a1026;
+    --rose: #ff5c8a;
+    --blush: #ffc2d4;
+    --gold: #f6c76b;
+    --cream: #fff1e6;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Vazirmatn", Tahoma, sans-serif;
+    color: var(--cream);
+    background: linear-gradient(180deg, var(--wine) 0%, var(--plum) 55%, var(--wine) 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    line-height: 1.9;
+  }
+  #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+  section { position: relative; z-index: 2; min-height: 100vh; padding: 72px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+  /* hero */
+  .hero h1 { font-size: clamp(2.6rem, 11vw, 5.4rem); font-weight: 800; margin: 18px 0 0; line-height: 1.3;
+    background: linear-gradient(90deg, var(--gold), var(--blush), var(--rose));
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero .name { font-size: clamp(1.6rem, 6vw, 2.6rem); font-weight: 300; color: var(--blush); margin: 4px 0 28px; }
+  .heart-big { width: clamp(120px, 34vw, 190px); animation: beat 1.5s ease-in-out infinite; filter: drop-shadow(0 0 28px rgba(255, 92, 138, .65)); }
+  @keyframes beat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.14); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    70% { transform: scale(1); }
+  }
+  .photo { width: clamp(150px, 42vw, 220px); aspect-ratio: 1; display: none; }
+  .photo.on { display: block; animation: beat 1.5s ease-in-out infinite; filter: drop-shadow(0 0 28px rgba(255, 92, 138, .65)); }
+  .photo image { width: 100%; height: 100%; }
+
+  .btn { font-family: inherit; font-size: 1.1rem; font-weight: 600; color: var(--wine); background: linear-gradient(135deg, var(--gold), var(--blush)); border: 0; border-radius: 999px; padding: 14px 34px; cursor: pointer; transition: transform .2s, box-shadow .2s; box-shadow: 0 8px 30px rgba(246, 199, 107, .25); }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(246, 199, 107, .4); }
+  .btn:focus-visible { outline: 3px solid var(--cream); outline-offset: 3px; }
+  .btn:disabled { opacity: .55; cursor: default; transform: none; }
+  .scroll-hint { margin-top: 38px; }
+
+  h2 { font-size: clamp(1.7rem, 6vw, 2.6rem); font-weight: 800; margin: 0 0 10px; color: var(--gold); }
+  .sub { color: var(--blush); margin: 0 0 30px; font-weight: 300; }
+
+  /* cake */
+  .cake { width: min(86vw, 360px); }
+  .flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker .5s ease-in-out infinite alternate; transition: opacity .5s, transform .5s; }
+  .flame:nth-of-type(2) { animation-delay: -.2s; }
+  .flame:nth-of-type(3) { animation-delay: -.35s; }
+  @keyframes flicker { from { transform: scale(1, 1) rotate(-3deg); } to { transform: scale(.88, 1.12) rotate(3deg); } }
+  .out .flame { opacity: 0; transform: scale(.2); animation: none; }
+  .smoke { opacity: 0; }
+  .out .smoke { animation: smoke 2.2s ease-out forwards; }
+  .out .smoke:nth-of-type(2) { animation-delay: .15s; }
+  .out .smoke:nth-of-type(3) { animation-delay: .3s; }
+  @keyframes smoke { 0% { opacity: .7; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-46px); } }
+  .glow { transition: opacity .6s; }
+  .out .glow { opacity: 0; }
+  .wish { min-height: 2.4em; margin-top: 22px; font-size: 1.3rem; color: var(--blush); opacity: 0; transition: opacity 1s; }
+  .wish.on { opacity: 1; }
+
+  /* letter */
+  .letter { max-width: 640px; width: 100%; padding: 38px 28px; border-radius: 26px; background: rgba(255, 241, 230, .06); border: 1px solid rgba(246, 199, 107, .35); backdrop-filter: blur(6px); }
+  .letter p { margin: 0 0 14px; font-size: 1.12rem; opacity: 0; transform: translateY(14px); transition: opacity .9s, transform .9s; }
+  .letter.in p { opacity: 1; transform: none; }
+  .letter.in p:nth-child(2) { transition-delay: .5s; }
+  .letter.in p:nth-child(3) { transition-delay: 1s; }
+  .letter.in p:nth-child(4) { transition-delay: 1.5s; }
+  .letter .sign { color: var(--gold); font-weight: 600; margin-top: 22px; }
+
+  /* age counter */
+  .ageGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 12px; max-width: 640px; width: 100%; }
+  .ageBox { padding: 16px 6px; border-radius: 18px; background: rgba(255, 241, 230, .06); border: 1px solid rgba(246, 199, 107, .35); }
+  .ageBox b { display: block; font-size: 2rem; color: var(--gold); font-weight: 800; line-height: 1.4; font-variant-numeric: tabular-nums; }
+  .ageBox span { color: var(--blush); font-weight: 300; }
+  .ageNext { margin-top: 26px; color: var(--blush); font-size: 1.15rem; }
+
+  /* reasons */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; max-width: 760px; width: 100%; }
+  .card { perspective: 800px; height: 150px; background: none; border: 0; padding: 0; font-family: inherit; color: inherit; cursor: pointer; }
+  .card:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; border-radius: 18px; }
+  .face { position: absolute; inset: 0; border-radius: 18px; display: flex; align-items: center; justify-content: center; padding: 14px; backface-visibility: hidden; transition: transform .7s; font-size: 1.02rem; }
+  .card { position: relative; }
+  .front { background: linear-gradient(135deg, #5a1a3a, #8c2a55); border: 1px solid rgba(255, 194, 212, .35); font-size: 2rem; }
+  .back { background: linear-gradient(135deg, var(--gold), var(--blush)); color: var(--wine); font-weight: 600; transform: rotateY(180deg); }
+  .card.flip .front { transform: rotateY(180deg); }
+  .card.flip .back { transform: rotateY(360deg); }
+
+  footer { position: relative; z-index: 2; text-align: center; padding: 50px 20px 90px; color: var(--blush); }
+  footer .mini { width: 34px; animation: beat 1.5s ease-in-out infinite; }
+
+  .music { position: fixed; bottom: 18px; left: 18px; z-index: 10; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(246, 199, 107, .5); background: rgba(26, 10, 20, .75); color: var(--gold); font-size: 1.4rem; cursor: pointer; }
+  .music:focus-visible { outline: 3px solid var(--cream); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition-duration: .01s !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<button class="music" id="music" aria-label="پخش آهنگ تولد" title="آهنگ تولد">♪</button>
+
+<!-- hero -->
+<section class="hero" id="top">
+  <svg class="heart-big" id="heartBig" viewBox="0 0 100 90" aria-hidden="true">
+    <defs>
+      <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ff8fb1"/>
+        <stop offset="1" stop-color="#e0245e"/>
+      </linearGradient>
+    </defs>
+    <path d="M50 86 C14 58 2 40 2 25 C2 11 13 2 26 2 C36 2 45 8 50 17 C55 8 64 2 74 2 C87 2 98 11 98 25 C98 40 86 58 50 86Z" fill="url(#hg)"/>
+    <path d="M18 24 C18 17 23 13 29 13" stroke="#ffd6e3" stroke-width="4" stroke-linecap="round" fill="none" opacity=".7"/>
+  </svg>
+
+  <svg class="photo" id="photoFrame" viewBox="0 0 100 90" aria-hidden="true">
+    <defs><clipPath id="hc"><path d="M50 86 C14 58 2 40 2 25 C2 11 13 2 26 2 C36 2 45 8 50 17 C55 8 64 2 74 2 C87 2 98 11 98 25 C98 40 86 58 50 86Z"/></clipPath></defs>
+    <image id="photoImg" href="" preserveAspectRatio="xMidYMid slice" clip-path="url(#hc)" x="0" y="0" width="100" height="90"/>
+    <path d="M50 86 C14 58 2 40 2 25 C2 11 13 2 26 2 C36 2 45 8 50 17 C55 8 64 2 74 2 C87 2 98 11 98 25 C98 40 86 58 50 86Z" fill="none" stroke="#f6c76b" stroke-width="2.5"/>
+  </svg>
+
+  <h1>تولدت مبارک</h1>
+  <p class="name" id="who"></p>
+  <button class="btn" id="start">برای تو ساختمش</button>
+  <p class="scroll-hint" style="color:var(--blush);font-weight:300">روی صفحه بزن تا قلب‌ها بیان</p>
+</section>
+
+<!-- cake -->
+<section id="cake">
+  <h2>یک آرزو بکن</h2>
+  <p class="sub">چشمات رو ببند، آرزو کن و بعد شمع‌ها رو فوت کن</p>
+
+  <svg class="cake" id="cakeSvg" viewBox="0 0 300 270" role="img" aria-label="کیک تولد با سه شمع">
+    <ellipse cx="150" cy="248" rx="128" ry="14" fill="#2a0c1d"/>
+    <ellipse cx="150" cy="242" rx="124" ry="12" fill="#f6c76b"/>
+
+    <rect x="38" y="160" width="224" height="80" rx="16" fill="#c2306b"/>
+    <path d="M38 176 Q56 200 74 176 Q92 204 110 176 Q128 202 146 176 Q164 206 182 176 Q200 202 218 176 Q236 204 262 176 L262 160 L38 160Z" fill="#ffe2ec"/>
+    <rect x="62" y="206" width="176" height="8" rx="4" fill="#f6c76b" opacity=".85"/>
+
+    <rect x="78" y="108" width="144" height="60" rx="14" fill="#e0457f"/>
+    <path d="M78 122 Q94 144 110 122 Q126 146 142 122 Q158 148 174 122 Q190 144 206 122 Q214 134 222 124 L222 108 L78 108Z" fill="#fff4f7"/>
+
+    <g>
+      <circle class="glow" cx="105" cy="68" r="26" fill="#ffd36b" opacity=".18"/>
+      <circle class="glow" cx="150" cy="60" r="26" fill="#ffd36b" opacity=".18"/>
+      <circle class="glow" cx="195" cy="68" r="26" fill="#ffd36b" opacity=".18"/>
+    </g>
+    <rect x="101" y="78" width="8" height="32" rx="3" fill="#8fd3ff"/>
+    <rect x="146" y="70" width="8" height="40" rx="3" fill="#ffe08f"/>
+    <rect x="191" y="78" width="8" height="32" rx="3" fill="#b9f0c0"/>
+
+    <path class="flame" d="M105 52 C98 62 99 74 105 76 C111 74 112 62 105 52Z" fill="#ffb347"/>
+    <path class="flame" d="M150 44 C143 54 144 66 150 68 C156 66 157 54 150 44Z" fill="#ffb347"/>
+    <path class="flame" d="M195 52 C188 62 189 74 195 76 C201 74 202 62 195 52Z" fill="#ffb347"/>
+    <path class="smoke" d="M105 60 q-6 -10 0 -20 t0 -20" stroke="#d9c9d2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path class="smoke" d="M150 52 q-6 -10 0 -20 t0 -20" stroke="#d9c9d2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path class="smoke" d="M195 60 q-6 -10 0 -20 t0 -20" stroke="#d9c9d2" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <p class="wish" id="wish">آرزوهات همه برآورده بشن، عزیزِ دلم</p>
+  <button class="btn" id="blow" style="margin-top:18px">فوت کن</button>
+</section>
+
+<!-- letter -->
+<section id="letter">
+  <h2>نامه‌ای برای تو</h2>
+  <div class="letter" id="letterBox"></div>
+</section>
+
+<!-- age -->
+<section id="age">
+  <h2>عمرِ تو</h2>
+  <p class="sub">هر ثانیه‌اش برای من با ارزشه</p>
+  <div class="ageGrid" id="ageGrid"></div>
+  <p class="ageNext" id="ageNext"></p>
+</section>
+
+<!-- reasons -->
+<section id="reasons">
+  <h2>چرا دوستت دارم</h2>
+  <p class="sub">روی هر کارت بزن</p>
+  <div class="cards" id="cards"></div>
+</section>
+
+<footer>
+  <svg class="mini" viewBox="0 0 100 90" aria-hidden="true"><path d="M50 86 C14 58 2 40 2 25 C2 11 13 2 26 2 C36 2 45 8 50 17 C55 8 64 2 74 2 C87 2 98 11 98 25 C98 40 86 58 50 86Z" fill="#ff5c8a"/></svg>
+  <p id="from"></p>
+</footer>
+
+<script>
+/* ---------- تنظیمات: فقط همین بخش رو ویرایش کن ---------- */
+const CONFIG = {
+  name: "همسر عزیزم",          // اسم همسرت
+  from: "با عشق، ایرج",         // امضای پایین صفحه و نامه
+  photo: "",                    // مسیر عکس (مثلاً "photo.jpg")؛ خالی = قلب ساده
+  birth: "1986-12-05T00:00:00",  // تاریخ تولد میلادی (۱۴ آذر ۱۳۶۵) به‌صورت سال-ماه-روز
+  letter: [
+    "سال‌ها کنار هم بودن، بزرگ‌ترین هدیه‌ی زندگی من بوده.",
+    "تو با صبوری و مهربونیت، خونه‌ی ما رو پر از آرامش کردی.",
+    "امروز روز توئه؛ می‌خوام بدونی هر روزِ من با بودنِ تو معنی داره.",
+    "تولدت مبارک، عشق من. این صفحه فقط بهونه‌ایه برای گفتن دوستت دارم."
+  ],
+  reasons: [
+    "مهربونیت",
+    "لبخندت",
+    "صبوریت",
+    "حمایت‌هات",
+    "چشمات",
+    "بودنت کنارم"
+  ]
+};
+/* -------------------------------------------------------- */
+
+const $ = (s) => document.querySelector(s);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+$("#who").textContent = CONFIG.name;
+$("#from").textContent = CONFIG.from;
+document.title = "تولدت مبارک " + CONFIG.name;
+
+if (CONFIG.photo) {
+  $("#photoImg").setAttribute("href", CONFIG.photo);
+  $("#photoFrame").classList.add("on");
+  $("#heartBig").style.display = "none";
+}
+
+$("#letterBox").innerHTML =
+  CONFIG.letter.map((t) => "<p>" + t + "</p>").join("") +
+  '<p class="sign">' + CONFIG.from + "</p>";
+
+$("#cards").innerHTML = CONFIG.reasons.map((r) =>
+  '<button class="card" aria-label="کارت دلیل">' +
+  '<div class="face front">❤</div><div class="face back">' + r + "</div></button>"
+).join("");
+document.querySelectorAll(".card").forEach((c) =>
+  c.addEventListener("click", () => c.classList.toggle("flip"))
+);
+
+new IntersectionObserver((es, ob) => es.forEach((e) => {
+  if (e.isIntersecting) { e.target.classList.add("in"); ob.unobserve(e.target); }
+}), { threshold: 0.35 }).observe($("#letterBox"));
+
+$("#start").addEventListener("click", () => {
+  burst(innerWidth / 2, innerHeight / 2, 40);
+  $("#cake").scrollIntoView({ behavior: "smooth" });
+});
+
+/* ---------- قلب‌ها و کاغذرنگی ---------- */
+const cv = $("#fx"), ctx = cv.getContext("2d");
+let W = 0, H = 0, dpr = Math.min(devicePixelRatio || 1, 2);
+function resize() {
+  W = innerWidth; H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resize(); addEventListener("resize", resize);
+
+const palette = ["#ff5c8a", "#ff8fb1", "#ffc2d4", "#f6c76b", "#ffffff", "#e0245e"];
+const parts = [];
+
+function heartPath(c, x, y, s) {
+  c.beginPath();
+  c.moveTo(x, y + s * 0.35);
+  c.bezierCurveTo(x, y, x - s * 0.5, y, x - s * 0.5, y + s * 0.35);
+  c.bezierCurveTo(x - s * 0.5, y + s * 0.7, x, y + s * 0.85, x, y + s);
+  c.bezierCurveTo(x, y + s * 0.85, x + s * 0.5, y + s * 0.7, x + s * 0.5, y + s * 0.35);
+  c.bezierCurveTo(x + s * 0.5, y, x, y, x, y + s * 0.35);
+  c.closePath();
+}
+
+function floaty() {
+  parts.push({
+    type: "heart", x: Math.random() * W, y: H + 30,
+    s: 12 + Math.random() * 26, vx: (Math.random() - 0.5) * 0.5, vy: -(0.6 + Math.random() * 1.2),
+    w: Math.random() * 6, color: palette[(Math.random() * 4) | 0], a: 0.75, life: 1, decay: 0
+  });
+}
+
+function burst(x, y, n) {
+  if (reduceMotion) return;
+  for (let i = 0; i < n; i++) {
+    const ang = Math.random() * Math.PI * 2, sp = 2 + Math.random() * 6;
+    parts.push({
+      type: Math.random() < 0.6 ? "heart" : "conf", x, y,
+      s: 8 + Math.random() * 16, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 3,
+      g: 0.12, w: Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3,
+      color: palette[(Math.random() * palette.length) | 0], a: 1, life: 1, decay: 0.008 + Math.random() * 0.008
+    });
+  }
+}
+
+addEventListener("pointerdown", (e) => {
+  if (e.target.closest("button")) return;
+  burst(e.clientX, e.clientY, 14);
+});
+
+let last = 0;
+function loop(t) {
+  ctx.clearRect(0, 0, W, H);
+  if (!reduceMotion && t - last > 420) { floaty(); last = t; }
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i];
+    p.x += p.vx; p.y += p.vy;
+    if (p.g) p.vy += p.g;
+    if (p.type === "heart" && !p.g) p.x += Math.sin((p.w += 0.03)) * 0.6;
+    p.life -= p.decay;
+    if (p.y < -60 || p.y > H + 80 || p.life <= 0) { parts.splice(i, 1); continue; }
+    ctx.globalAlpha = Math.max(0, p.a * p.life);
+    ctx.fillStyle = p.color;
+    if (p.type === "heart") {
+      heartPath(ctx, p.x, p.y, p.s); ctx.fill();
+    } else {
+      p.r += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.fillRect(-p.s / 4, -p.s / 8, p.s / 2, p.s / 4);
+      ctx.restore();
+    }
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ---------- فوت کردن شمع ---------- */
+$("#blow").addEventListener("click", () => {
+  $("#cakeSvg").classList.add("out");
+  $("#wish").classList.add("on");
+  const r = $("#cakeSvg").getBoundingClientRect();
+  burst(r.left + r.width / 2, r.top + r.height * 0.3, 90);
+  setTimeout(() => burst(innerWidth * 0.2, innerHeight * 0.4, 40), 300);
+  setTimeout(() => burst(innerWidth * 0.8, innerHeight * 0.4, 40), 500);
+  $("#blow").disabled = true;
+  $("#blow").textContent = "تولدت مبارک!";
+  setTimeout(() => $("#letter").scrollIntoView({ behavior: "smooth" }), 3200);
+});
+
+/* ---------- شمارنده‌ی زنده‌ی سن ---------- */
+const BIRTH = new Date(CONFIG.birth);
+const fa = (n) => n.toLocaleString("fa-IR");
+function ageParts(now) {
+  let y = now.getFullYear() - BIRTH.getFullYear();
+  let m = now.getMonth() - BIRTH.getMonth();
+  let d = now.getDate() - BIRTH.getDate();
+  let h = now.getHours() - BIRTH.getHours();
+  let mi = now.getMinutes() - BIRTH.getMinutes();
+  let sec = now.getSeconds() - BIRTH.getSeconds();
+  if (sec < 0) { sec += 60; mi--; }
+  if (mi < 0) { mi += 60; h--; }
+  if (h < 0) { h += 24; d--; }
+  if (d < 0) { d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); m--; }
+  if (m < 0) { m += 12; y--; }
+  return { y, m, w: Math.floor(d / 7), d: d % 7, h, mi, s: sec };
+}
+const ageBoxes = [["y", "سال"], ["m", "ماه"], ["w", "هفته"], ["d", "روز"], ["h", "ساعت"], ["mi", "دقیقه"], ["s", "ثانیه"]];
+$("#ageGrid").innerHTML = ageBoxes.map(([k, l]) =>
+  '<div class="ageBox"><b id="age-' + k + '">0</b><span>' + l + "</span></div>").join("");
+function nextBirthday(now) {
+  const n = new Date(now.getFullYear(), BIRTH.getMonth(), BIRTH.getDate(), BIRTH.getHours(), BIRTH.getMinutes(), BIRTH.getSeconds());
+  if (n <= now) n.setFullYear(n.getFullYear() + 1);
+  return n;
+}
+function tickAge() {
+  const now = new Date();
+  const a = ageParts(now);
+  ageBoxes.forEach(([k]) => { $("#age-" + k).textContent = fa(a[k]); });
+  const left = nextBirthday(now) - now;
+  const days = Math.floor(left / 86400000);
+  const hrs = Math.floor((left % 86400000) / 3600000);
+  $("#ageNext").textContent = (a.m === 0 && a.w === 0 && a.d === 0)
+    ? "امروز روز تولدته، تولدت مبارک!"
+    : "تا تولد بعدی " + fa(days) + " روز و " + fa(hrs) + " ساعت مونده";
+}
+tickAge(); setInterval(tickAge, 1000);
+
+/* ---------- موسیقی ---------- */
+const SONGS = [
+  "song.mp3",
+  "Desert Rose DUORUSH_320k.mp3",
+  "Desert.Rose.DUORUSH_320k.mp3",
+  "song.m4a"
+];
+let si = 0, songOk = true;
+function note(t) {
+  if (!location.search.includes("debug")) return;
+  let el = document.getElementById("dbg");
+  if (!el) {
+    el = document.createElement("div"); el.id = "dbg";
+    el.style.cssText = "position:fixed;top:8px;left:8px;right:8px;z-index:20;background:rgba(0,0,0,.8);color:#fff;padding:8px 12px;border-radius:10px;font:13px/1.6 sans-serif;direction:ltr;text-align:left";
+    document.body.appendChild(el);
+  }
+  el.textContent = t;
+}
+const audio = new Audio();
+audio.loop = true;
+audio.preload = "auto";
+audio.volume = 0.85;
+function loadSong() {
+  audio.src = encodeURI(SONGS[si]);
+  note("trying: " + SONGS[si]);
+}
+audio.addEventListener("error", () => {
+  si++;
+  if (si < SONGS.length) {
+    loadSong();
+    if (playing) audio.play().catch(() => {});
+  } else {
+    songOk = false;
+    note("no song file found, using backup tune");
+    if (playing && !actx) startSynth();
+  }
+});
+audio.addEventListener("playing", () => note("playing: " + SONGS[si]));
+
+let playing = false;
+let actx = null, timers = [];
+const N = { C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392, A4: 440, Bb4: 466.16, C5: 523.25 };
+const tune = [
+  ["C4", .75], ["C4", .25], ["D4", 1], ["C4", 1], ["F4", 1], ["E4", 2],
+  ["C4", .75], ["C4", .25], ["D4", 1], ["C4", 1], ["G4", 1], ["F4", 2],
+  ["C4", .75], ["C4", .25], ["C5", 1], ["A4", 1], ["F4", 1], ["E4", 1], ["D4", 2],
+  ["Bb4", .75], ["Bb4", .25], ["A4", 1], ["F4", 1], ["G4", 1], ["F4", 2]
+];
+function playTune() {
+  const beat = 0.42; let t = actx.currentTime + 0.05;
+  tune.forEach(([n, d]) => {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = "triangle"; o.frequency.value = N[n];
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.18, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + d * beat);
+    o.connect(g); g.connect(actx.destination);
+    o.start(t); o.stop(t + d * beat + 0.05);
+    t += d * beat;
+  });
+  return (t - actx.currentTime) * 1000;
+}
+function startSynth() {
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  const again = () => {
+    if (!playing || !actx) return;
+    const ms = playTune();
+    timers.push(setTimeout(again, ms + 1200));
+  };
+  again();
+}
+function stopSynth() {
+  timers.forEach(clearTimeout); timers = [];
+  if (actx) { actx.close(); actx = null; }
+}
+
+function setMusicUI(on) {
+  $("#music").textContent = on ? "\u275A\u275A" : "\u266A";
+  $("#music").setAttribute("aria-label", on ? "توقف آهنگ" : "پخش آهنگ");
+}
+function startMusic() {
+  if (playing) return;
+  playing = true; setMusicUI(true);
+  if (songOk) {
+    audio.play().catch((err) => {
+      if (err && err.name === "NotAllowedError") { playing = false; setMusicUI(false); }
+    });
+  } else {
+    startSynth();
+  }
+}
+function stopMusic() {
+  playing = false; setMusicUI(false);
+  audio.pause(); stopSynth();
+}
+$("#music").addEventListener("click", () => (playing ? stopMusic() : startMusic()));
+$("#start").addEventListener("click", startMusic);
+loadSong();
+</script>
+</body>
+</html>

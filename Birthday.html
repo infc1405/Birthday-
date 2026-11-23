@@ -339,8 +339,7 @@ function burst(x, y, n) {
 }
 
 addEventListener("pointerdown", (e) => {
-  if (e.target.closest("button")) return;
-  burst(e.clientX, e.clientY, 14);
+  burst(e.clientX, e.clientY, e.target.closest(".card") ? 22 : 14);
 });
 
 let last = 0;

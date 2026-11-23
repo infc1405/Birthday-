@@ -31,6 +31,13 @@
 
   section { position: relative; z-index: 2; min-height: 100vh; padding: 72px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 
+  /* entry gate */
+  body.locked { overflow: hidden; height: 100vh; }
+  .gate { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; background: radial-gradient(circle at 50% 40%, #5a1a3a 0%, var(--wine) 72%); transition: opacity .9s, visibility .9s; }
+  .gate.gone { opacity: 0; visibility: hidden; }
+  .gate h2 { margin: 22px 0 6px; }
+  .gate p { margin: 0 0 28px; color: var(--blush); font-weight: 300; }
+
   /* hero */
   .hero h1 { font-size: clamp(2.6rem, 11vw, 5.4rem); font-weight: 800; margin: 18px 0 0; line-height: 1.3;
     background: linear-gradient(90deg, var(--gold), var(--blush), var(--rose));
@@ -112,9 +119,20 @@
   }
 </style>
 </head>
-<body>
+<body class="locked">
 
 <canvas id="fx" aria-hidden="true"></canvas>
+<div class="gate" id="gate">
+  <svg class="heart-big" viewBox="0 0 100 90" aria-hidden="true">
+    <path d="M50 86 C14 58 2 40 2 25 C2 11 13 2 26 2 C36 2 45 8 50 17 C55 8 64 2 74 2 C87 2 98 11 98 25 C98 40 86 58 50 86Z" fill="#ff5c8a"/>
+    <path d="M18 24 C18 17 23 13 29 13" stroke="#ffd6e3" stroke-width="4" stroke-linecap="round" fill="none" opacity=".7"/>
+  </svg>
+  <h2>یک هدیه برای تو</h2>
+  <p>صدای گوشی رو باز کن و بزن</p>
+  <button class="btn" id="open">باز کن</button>
+</div>
+
+
 <button class="music" id="music" aria-label="پخش آهنگ تولد" title="آهنگ تولد">♪</button>
 
 <!-- hero -->
@@ -254,8 +272,21 @@ document.querySelectorAll(".card").forEach((c) =>
   c.addEventListener("click", () => c.classList.toggle("flip"))
 );
 
+// بعد از نمایش نامه: ۳۵ ثانیه تا عمرشمار، بعد ۳۰ ثانیه تا بخش آخر (کارت‌های قلب)
+const LETTER_TO_AGE = 35000, AGE_TO_REASONS = 30000;
+function goTo(sel) {
+  const el = $(sel);
+  if (el && window.scrollY < el.offsetTop - 80) el.scrollIntoView({ behavior: "smooth" });
+}
+function autoTour() {
+  setTimeout(() => {
+    goTo("#age");
+    setTimeout(() => goTo("#reasons"), AGE_TO_REASONS);
+  }, LETTER_TO_AGE);
+}
+
 new IntersectionObserver((es, ob) => es.forEach((e) => {
-  if (e.isIntersecting) { e.target.classList.add("in"); ob.unobserve(e.target); }
+  if (e.isIntersecting) { e.target.classList.add("in"); ob.unobserve(e.target); autoTour(); }
 }), { threshold: 0.35 }).observe($("#letterBox"));
 
 $("#start").addEventListener("click", () => {
@@ -488,6 +519,22 @@ function stopMusic() {
 $("#music").addEventListener("click", () => (playing ? stopMusic() : startMusic()));
 $("#start").addEventListener("click", startMusic);
 loadSong();
+
+const gate = $("#gate");
+function openGate() {
+  document.body.classList.remove("locked");
+  gate.classList.add("gone");
+  setTimeout(() => gate.remove(), 1000);
+}
+$("#open").addEventListener("click", () => {
+  startMusic();
+  openGate();
+  burst(innerWidth / 2, innerHeight / 2, 60);
+});
+// اگر مرورگر اجازه‌ی پخش خودکار بده، بدون لمس هم شروع می‌شه
+audio.play().then(() => {
+  playing = true; setMusicUI(true); openGate();
+}).catch(() => {});
 </script>
 </body>
 </html>
